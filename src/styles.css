@@ -349,9 +349,12 @@ p { margin: 0 0 16px; }
 
 .hero-copy h1 {
   font-size: clamp(2.75rem, 4vw + 1rem, 5rem);
-  max-width: 12ch;
-  letter-spacing: 0.01em;
+  max-width: none;
+  letter-spacing: 0.04em;
+  line-height: 1.24;
 }
+
+.hero-copy h1 span { display: block; }
 
 .hero-actions {
   display: flex;
@@ -952,7 +955,9 @@ details p { margin: 12px 0 0; }
   }
   .hero-copy h1 {
     font-size: clamp(1.85rem, 7.2vw, 2.5rem);
-    max-width: 14ch;
+    max-width: none;
+    letter-spacing: 0.03em;
+    line-height: 1.12;
   }
   .hero-copy .lede { font-size: 16.5px; }
   .promise-card {
@@ -1159,9 +1164,15 @@ details summary::after {
   .page-hero .wrap > * { animation: rise-in 520ms var(--ease-out) backwards; }
   .page-hero .wrap > *:nth-child(2) { animation-delay: 80ms; }
   .page-hero .wrap > *:nth-child(3) { animation-delay: 150ms; }
-  .hero-actions,
-  .trust-line,
-  .scroll-cue { animation: rise-in 520ms var(--ease-out) 120ms backwards; }
+  .hero-copy .eyebrow { animation: rise-in 520ms var(--ease-out) backwards; }
+  .hero-copy h1 span { animation: rise-in 560ms var(--ease-out) backwards; }
+  .hero-copy h1 span:nth-child(1) { animation-delay: 80ms; }
+  .hero-copy h1 span:nth-child(2) { animation-delay: 170ms; }
+  .hero-copy h1 span:nth-child(3) { animation-delay: 260ms; }
+  .hero-copy .lede { animation: rise-in 520ms var(--ease-out) 340ms backwards; }
+  .hero-actions { animation: rise-in 520ms var(--ease-out) 420ms backwards; }
+  .trust-line { animation: rise-in 520ms var(--ease-out) 500ms backwards; }
+  .scroll-cue { animation: rise-in 520ms var(--ease-out) 580ms backwards; }
   .promise-card .trust li { animation: rise-in 520ms var(--ease-out) backwards; }
   .promise-card .trust li:nth-child(2) { animation-delay: 90ms; }
   .promise-card .trust li:nth-child(3) { animation-delay: 170ms; }
