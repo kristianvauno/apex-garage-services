@@ -39,6 +39,10 @@
   --radius-ctl: 8px;
   --max: 1160px;
   --header: 76px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --motion-hover: 220ms;
+  --motion-reveal: 360ms;
+  --motion-menu: 200ms;
 }
 
 *,
@@ -95,6 +99,11 @@ p { margin: 0 0 16px; }
 }
 
 .skip:focus { top: 8px; }
+
+:focus-visible {
+  outline: 2px solid var(--apex-cyan);
+  outline-offset: 3px;
+}
 
 .wrap {
   width: min(var(--max), calc(100% - 32px));
@@ -189,7 +198,8 @@ p { margin: 0 0 16px; }
 }
 
 .nav-menu {
-  display: none;
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
@@ -200,6 +210,10 @@ p { margin: 0 0 16px; }
   border: 1px solid var(--apex-silver);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
 }
 
 .nav-menu::before {
@@ -214,8 +228,11 @@ p { margin: 0 0 16px; }
 .nav-drop:hover .nav-menu,
 .nav-drop:focus-within .nav-menu,
 .nav-drop[data-open="true"] .nav-menu {
-  display: flex;
-  flex-direction: column;
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity var(--motion-menu) var(--ease-out), transform var(--motion-menu) var(--ease-out);
 }
 
 .nav-menu a { white-space: nowrap; }
@@ -248,6 +265,8 @@ p { margin: 0 0 16px; }
 }
 
 .btn {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -370,11 +389,14 @@ main .section:not(.band) .btn-ghost:hover { background: var(--apex-ground); colo
 .card {
   display: flex;
   flex-direction: column;
+  position: relative;
+  isolation: isolate;
   background: var(--apex-white);
   border: 1px solid var(--apex-silver);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow);
-  overflow: hidden;
+  /* The photo link clips itself. The card stays visible so the hover shadow and focus ring are not cut off. */
+  overflow: visible;
 }
 
 .card > a {
@@ -382,6 +404,7 @@ main .section:not(.band) .btn-ghost:hover { background: var(--apex-ground); colo
   position: relative;
   aspect-ratio: 3 / 2;
   overflow: hidden;
+  border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
 }
 
 .card > a picture { display: block; height: 100%; }
@@ -601,6 +624,10 @@ details p { margin: 12px 0 0; }
     border-radius: 0;
     box-shadow: none;
     background: transparent;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
   }
   .nav-menu a { white-space: normal; }
   .menu-btn { display: inline-flex; align-items: center; justify-content: center; }
@@ -637,6 +664,19 @@ details p { margin: 12px 0 0; }
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;
+  }
+  [data-reveal],
+  [data-reveal].is-pending,
+  [data-reveal].is-shown {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .nav-drop:hover .nav-menu,
+  .nav-drop:focus-within .nav-menu,
+  .nav-drop[data-open="true"] .nav-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
   }
 }
 
@@ -807,4 +847,121 @@ details p { margin: 12px 0 0; }
 
 @media (max-width: 900px) {
   .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* Hover and reveal. Transform and opacity only. Phase 3 page-enter stays off. */
+.site-nav > a,
+.nav-drop > a { position: relative; }
+
+.site-nav > a::before,
+.nav-drop > a::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 2px;
+  background: var(--apex-teal);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.btn::before,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.btn::before {
+  z-index: -1;
+  box-shadow: 0 8px 18px rgba(12, 24, 60, 0.18);
+}
+
+.card::after {
+  z-index: -1;
+  box-shadow: 0 16px 32px rgba(12, 24, 60, 0.16);
+}
+
+details summary { position: relative; }
+
+details summary::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--apex-teal);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.card > a:focus-visible { outline-offset: -4px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .btn {
+    transition: transform var(--motion-hover) var(--ease-out);
+  }
+  .btn::before,
+  .card::after,
+  .site-nav > a::before,
+  .nav-drop > a::before,
+  details summary::after,
+  .card > a img {
+    transition: opacity var(--motion-hover) var(--ease-out), transform var(--motion-hover) var(--ease-out);
+  }
+  .card > a img { transition: transform 300ms var(--ease-out); }
+  .btn:hover:not(:disabled) { transform: translateY(-2px); }
+  .btn:hover:not(:disabled)::before { opacity: 1; }
+  .btn-ghost:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn:disabled,
+  .btn:disabled:hover,
+  .mobile-bar .btn,
+  .mobile-bar .btn:hover {
+    transform: none;
+  }
+  .btn:disabled::before,
+  .mobile-bar .btn::before { opacity: 0; }
+  .site-nav > a:hover::before,
+  .nav-drop > a:hover::before { transform: scaleX(1); }
+  .card { transition: transform var(--motion-hover) var(--ease-out); }
+  .card:hover:not(.is-pending) { transform: translateY(-4px); }
+  .card:hover:not(.is-pending)::after { opacity: 1; }
+  .card:hover:not(.is-pending) > a img { transform: scale(1.025); }
+  html.js-motion .card[data-reveal].is-shown:hover {
+    transform: translateY(-4px);
+    transition: transform var(--motion-hover) var(--ease-out), opacity var(--motion-reveal) var(--ease-out);
+  }
+  details summary:hover::after { transform: scaleX(1); }
+}
+
+html.js-motion [data-reveal].is-pending {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: none;
+}
+
+html.js-motion [data-reveal].is-shown {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--motion-reveal) var(--ease-out) var(--reveal-delay, 0ms),
+    transform var(--motion-reveal) var(--ease-out) var(--reveal-delay, 0ms);
+}
+
+@media (max-width: 900px) {
+  html.js-motion [data-reveal].is-pending { transform: translateY(16px); }
+  html.js-motion [data-reveal-group] > [data-reveal] { transition-delay: 0ms !important; }
+  .nav-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
 }
