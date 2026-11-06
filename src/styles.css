@@ -406,11 +406,11 @@ main .section:not(.band) .btn-ghost:hover { background: var(--apex-ground); colo
 .promise-card .trust strong { color: var(--apex-navy); }
 
 .area-band {
-  padding: 64px 0 8px;
+  padding: 52px 0 16px;
   background: var(--apex-ground);
 }
 
-.area-band p { margin: 0; }
+.area-band p { margin-block: 0; }
 
 .chips {
   display: flex;
