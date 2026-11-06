@@ -327,7 +327,7 @@ p { margin: 0 0 16px; }
 .hero-shade {
   grid-area: 1 / 1;
   z-index: 1;
-  background: linear-gradient(90deg, rgba(12, 24, 60, 0.94) 0%, rgba(12, 24, 60, 0.84) 36%, rgba(12, 24, 60, 0.42) 68%, rgba(12, 24, 60, 0.22) 100%);
+  background: linear-gradient(90deg, rgba(7, 14, 34, 0.92) 0%, rgba(7, 14, 34, 0.88) 40%, rgba(7, 14, 34, 0.28) 58%, rgba(7, 14, 34, 0) 72%);
   pointer-events: none;
 }
 
