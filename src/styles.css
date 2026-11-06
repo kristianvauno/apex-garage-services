@@ -1229,63 +1229,66 @@ html.js-motion [data-reveal].is-shown {
 }
 
 .bay-viewport {
+  position: relative;
   overflow: hidden;
-  aspect-ratio: 800 / 360;
+  aspect-ratio: 16 / 9;
   border: 1px solid var(--apex-line);
   border-radius: var(--radius-card);
-  background:
-    radial-gradient(120% 80% at 70% 20%, rgba(24, 156, 156, 0.18), transparent 55%),
-    var(--apex-surface);
+  background: #15233f;
 }
 
-.bay-zoom {
-  position: relative;
+.spin {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+
+.spin:focus-visible {
+  outline: 2px solid var(--apex-teal-text);
+  outline-offset: -3px;
+}
+
+.spin.is-dragging { cursor: grabbing; }
+
+.spin-frame {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  transform-origin: 50% 50%;
-  transform: scale(var(--z, 1)) translate(calc((50 - var(--x, 50)) * 1%), calc((50 - var(--y, 50)) * 1%));
-  transition: transform 680ms var(--ease-out);
-}
-
-.bay-car { width: 100%; height: 100%; display: block; }
-
-.bay-car .zone {
-  fill: rgba(140, 243, 236, 0.16);
-  stroke: #8cf3ec;
-  stroke-width: 3;
+  object-fit: cover;
   opacity: 0;
-  transition: opacity 420ms var(--ease-out);
+  pointer-events: none;
+  transition: opacity 160ms linear;
 }
 
-.bay-car[data-zone="oil"] .zone-oil,
-.bay-car[data-zone="fluids"] .zone-fluids,
-.bay-car[data-zone="filter"] .zone-filter,
-.bay-car[data-zone="battery"] .zone-battery,
-.bay-car[data-zone="brake"] .zone-brake,
-.bay-car[data-zone="line"] .zone-line,
-.bay-car[data-zone="tire"] .zone-tire,
-.bay-car[data-zone="align"] .zone-align,
-.bay-car[data-zone="suspension"] .zone-suspension,
-.bay-car[data-zone="engine"] .zone-engine,
-.bay-car[data-zone="trans"] .zone-trans,
-.bay-car[data-zone="cool"] .zone-cool,
-.bay-car[data-zone="electric"] .zone-electric,
-.bay-car[data-zone="hvac"] .zone-hvac,
-.bay-car[data-zone="exhaust"] .zone-exhaust,
-.bay-car[data-zone="inspect"] .zone-inspect { opacity: 1; }
+.spin.is-dragging .spin-frame { transition-duration: 40ms; }
+
+.spin-frame.is-on { opacity: 1; }
+
+.spin-hint {
+  margin: 10px 0 0;
+  color: var(--apex-muted);
+  font-size: 14px;
+}
 
 .pin {
   position: absolute;
-  left: 66.25%;
-  top: 67.2%;
+  left: 68%;
+  top: 63%;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: #8cf3ec;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: left 680ms var(--ease-out), top 680ms var(--ease-out);
+  transition: opacity 80ms linear;
 }
+
+.spin.is-turning .pin,
+.spin.is-dragging .pin,
+.spin.is-free .pin { opacity: 0; }
 
 .pin::before {
   content: "";

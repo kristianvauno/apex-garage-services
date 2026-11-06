@@ -183,29 +183,79 @@
   function initBay() {
     var root = document.querySelector("[data-bay]");
     if (!root) return;
-    var zoom = root.querySelector(".bay-zoom");
-    var car = root.querySelector(".bay-car");
+    var spin = root.querySelector(".spin");
+    var frames = root.querySelectorAll(".spin-frame");
     var pin = root.querySelector(".pin");
     var where = root.querySelector(".bay-where");
     var name = root.querySelector(".bay-name");
     var buttons = root.querySelectorAll(".svc");
-    function select(btn, announce) {
-      Array.prototype.forEach.call(buttons, function (item) {
-        item.setAttribute("aria-pressed", item === btn ? "true" : "false");
+    if (!spin || !frames.length || !pin) return;
+    var count = frames.length;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var frame = 0;
+    var timer = null;
+    var token = 0;
+    var active = null;
+
+    function showFrame(index) {
+      frame = (index + count) % count;
+      Array.prototype.forEach.call(frames, function (img) {
+        var on = Number(img.getAttribute("data-i")) === frame;
+        img.classList.toggle("is-on", on);
       });
-      var x = Number(btn.getAttribute("data-x")) / 8;
-      var y = Number(btn.getAttribute("data-y")) / 3.6;
-      zoom.style.setProperty("--x", String(x));
-      zoom.style.setProperty("--y", String(y));
-      zoom.style.setProperty("--z", btn.getAttribute("data-z") || "1");
-      pin.style.left = x + "%";
-      pin.style.top = y + "%";
-      car.setAttribute("data-zone", btn.getAttribute("data-zone") || "");
-      if (!announce) return;
+    }
+
+    function placePin(btn) {
+      pin.style.left = (btn.getAttribute("data-px") || "50") + "%";
+      pin.style.top = (btn.getAttribute("data-py") || "50") + "%";
+      spin.classList.remove("is-turning");
+      spin.classList.remove("is-free");
+    }
+
+    function label(btn) {
       var title = btn.querySelector("strong");
       if (where) where.textContent = btn.getAttribute("data-where") || "";
       if (name) name.textContent = title ? title.textContent : "";
     }
+
+    function select(btn, announce) {
+      active = btn;
+      Array.prototype.forEach.call(buttons, function (item) {
+        item.setAttribute("aria-pressed", item === btn ? "true" : "false");
+      });
+      if (announce) label(btn);
+      var target = Number(btn.getAttribute("data-frame"));
+      if (isNaN(target)) target = 0;
+      var mine = ++token;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      if (reduce || frame === target) {
+        showFrame(target);
+        placePin(btn);
+        return;
+      }
+      spin.classList.add("is-turning");
+      var forward = (target - frame + count) % count;
+      var back = (frame - target + count) % count;
+      var dir = forward <= back ? 1 : -1;
+      var steps = Math.min(forward, back);
+      var step = 0;
+      function tick() {
+        if (mine !== token) return;
+        step += 1;
+        showFrame(frame + dir);
+        if (step >= steps) {
+          timer = null;
+          placePin(btn);
+          return;
+        }
+        timer = setTimeout(tick, 90);
+      }
+      timer = setTimeout(tick, 90);
+    }
+
     Array.prototype.forEach.call(buttons, function (btn) {
       btn.addEventListener("pointerenter", function (event) {
         if (event.pointerType && event.pointerType !== "mouse") return;
@@ -214,7 +264,76 @@
       btn.addEventListener("focus", function () { select(btn, true); });
       btn.addEventListener("click", function () { select(btn, true); });
     });
-    if (buttons[0]) select(buttons[0], false);
+
+    var drag = null;
+    spin.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      drag = { id: event.pointerId, x: event.clientX, acc: 0, turned: false };
+      spin.setPointerCapture(event.pointerId);
+      spin.classList.add("is-dragging");
+      token += 1;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    });
+    spin.addEventListener("pointermove", function (event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var moved = event.clientX - drag.x - drag.acc;
+      var stepPx = 28;
+      while (moved >= stepPx) {
+        showFrame(frame - 1);
+        drag.acc += stepPx;
+        drag.turned = true;
+        moved -= stepPx;
+      }
+      while (moved <= -stepPx) {
+        showFrame(frame + 1);
+        drag.acc -= stepPx;
+        drag.turned = true;
+        moved += stepPx;
+      }
+    });
+    function endDrag(event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var turned = drag.turned;
+      drag = null;
+      spin.classList.remove("is-dragging");
+      if (!turned && active) {
+        placePin(active);
+        return;
+      }
+      active = null;
+      spin.classList.add("is-free");
+      Array.prototype.forEach.call(buttons, function (item) {
+        item.setAttribute("aria-pressed", "false");
+      });
+    }
+    spin.addEventListener("pointerup", endDrag);
+    spin.addEventListener("pointercancel", endDrag);
+    spin.addEventListener("keydown", function (event) {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      event.preventDefault();
+      token += 1;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      showFrame(frame + (event.key === "ArrowRight" ? -1 : 1));
+      spin.classList.add("is-free");
+      active = null;
+      Array.prototype.forEach.call(buttons, function (item) {
+        item.setAttribute("aria-pressed", "false");
+      });
+      setTimeout(function () { spin.classList.remove("is-dragging"); }, 80);
+    });
+
+    var current = root.querySelector('.svc[aria-pressed="true"]') || buttons[0];
+    if (current) {
+      frame = Number(current.getAttribute("data-frame")) || 0;
+      showFrame(frame);
+      select(current, false);
+    }
   }
 
   function initReveal() {
