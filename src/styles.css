@@ -1003,7 +1003,37 @@ details p { margin: 12px 0 0; }
   .footer-grid { grid-template-columns: 1fr; }
 }
 
-/* Hover and reveal. Transform and opacity only. Phase 3 page-enter stays off. */
+#estimate {
+  background:
+    radial-gradient(820px 260px at 0% 0%, rgba(24, 156, 156, 0.16), transparent 72%),
+    var(--apex-white);
+}
+
+.reviews-hero {
+  background: var(--apex-navy);
+  color: var(--apex-white);
+  padding: 72px 0 72px;
+}
+
+.reviews-hero h1,
+.reviews-hero .lede { color: var(--apex-white); }
+
+.reviews-hero .eyebrow { color: var(--apex-cyan); }
+
+.reviews-hero .lede { max-width: 40ch; }
+
+#google-reviews { padding-top: 0; }
+
+#google-reviews .prose {
+  background: var(--apex-white);
+  border: 1px solid var(--apex-silver);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  padding: 32px 28px;
+  margin-top: -36px;
+}
+
+/* Hover and reveal. Transform and opacity only. The hero photo stays visible. */
 .site-nav > a,
 .nav-drop > a { position: relative; }
 
@@ -1095,6 +1125,35 @@ details summary::after {
     transition: transform var(--motion-hover) var(--ease-out), opacity var(--motion-reveal) var(--ease-out);
   }
   details summary:hover::after { transform: scaleX(1); }
+  .frame img { transition: transform 420ms var(--ease-out); }
+  .frame:hover img { transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-media img {
+    transform-origin: 68% 42%;
+    animation: hero-drift 18s var(--ease-out) both;
+  }
+  .page-hero .wrap > * { animation: rise-in 520ms var(--ease-out) backwards; }
+  .page-hero .wrap > *:nth-child(2) { animation-delay: 80ms; }
+  .page-hero .wrap > *:nth-child(3) { animation-delay: 150ms; }
+  .hero-actions,
+  .trust-line,
+  .scroll-cue { animation: rise-in 520ms var(--ease-out) 120ms backwards; }
+  .promise-card .trust li { animation: rise-in 520ms var(--ease-out) backwards; }
+  .promise-card .trust li:nth-child(2) { animation-delay: 90ms; }
+  .promise-card .trust li:nth-child(3) { animation-delay: 170ms; }
+  .area-band p { animation: rise-in 520ms var(--ease-out) 180ms backwards; }
+}
+
+@keyframes hero-drift {
+  from { transform: scale(1.07); }
+  to { transform: scale(1); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 }
 
 html.js-motion [data-reveal].is-pending {

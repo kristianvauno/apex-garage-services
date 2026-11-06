@@ -214,6 +214,21 @@
     try {
       if (reduce.matches || !("IntersectionObserver" in window)) return;
       document.documentElement.classList.add("js-motion");
+      function arm(node) {
+        if (!node || node.hasAttribute("data-reveal") || node.closest("[data-reveal]") || node.closest(".mobile-bar")) return;
+        node.setAttribute("data-reveal", "");
+      }
+      var foot = document.querySelector(".footer-grid");
+      if (foot && !foot.hasAttribute("data-reveal-group")) {
+        foot.setAttribute("data-reveal-group", "");
+        Array.prototype.forEach.call(foot.children, arm);
+      }
+      Array.prototype.forEach.call(document.querySelectorAll(".faq"), function (faq) {
+        if (faq.closest("[data-reveal]")) return;
+        faq.setAttribute("data-reveal-group", "");
+        Array.prototype.forEach.call(faq.querySelectorAll("details"), arm);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".split > *, .gallery .frame, .cta-band .wrap, #google-reviews .prose"), arm);
       Array.prototype.forEach.call(document.querySelectorAll("[data-reveal-group]"), function (group) {
         var index = 0;
         Array.prototype.forEach.call(group.children, function (child) {
