@@ -62,6 +62,7 @@
   });
 
   initReveal();
+  initBay();
 
   var form = document.getElementById("estimate-form");
   if (!form) return;
@@ -178,6 +179,43 @@
       submit.textContent = label;
     });
   });
+
+  function initBay() {
+    var root = document.querySelector("[data-bay]");
+    if (!root) return;
+    var zoom = root.querySelector(".bay-zoom");
+    var car = root.querySelector(".bay-car");
+    var pin = root.querySelector(".pin");
+    var where = root.querySelector(".bay-where");
+    var name = root.querySelector(".bay-name");
+    var buttons = root.querySelectorAll(".svc");
+    function select(btn, announce) {
+      Array.prototype.forEach.call(buttons, function (item) {
+        item.setAttribute("aria-pressed", item === btn ? "true" : "false");
+      });
+      var x = Number(btn.getAttribute("data-x")) / 8;
+      var y = Number(btn.getAttribute("data-y")) / 3.6;
+      zoom.style.setProperty("--x", String(x));
+      zoom.style.setProperty("--y", String(y));
+      zoom.style.setProperty("--z", btn.getAttribute("data-z") || "1");
+      pin.style.left = x + "%";
+      pin.style.top = y + "%";
+      car.setAttribute("data-zone", btn.getAttribute("data-zone") || "");
+      if (!announce) return;
+      var title = btn.querySelector("strong");
+      if (where) where.textContent = btn.getAttribute("data-where") || "";
+      if (name) name.textContent = title ? title.textContent : "";
+    }
+    Array.prototype.forEach.call(buttons, function (btn) {
+      btn.addEventListener("pointerenter", function (event) {
+        if (event.pointerType && event.pointerType !== "mouse") return;
+        select(btn, true);
+      });
+      btn.addEventListener("focus", function () { select(btn, true); });
+      btn.addEventListener("click", function () { select(btn, true); });
+    });
+    if (buttons[0]) select(buttons[0], false);
+  }
 
   function initReveal() {
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");

@@ -1212,3 +1212,180 @@ html.js-motion [data-reveal].is-shown {
     pointer-events: auto;
   }
 }
+
+#on-the-car { scroll-margin-top: calc(var(--header) + 8px); }
+
+.bay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 460px);
+  gap: 28px;
+  align-items: start;
+}
+
+.bay-stage {
+  position: sticky;
+  top: calc(var(--header) + 12px);
+  z-index: 2;
+}
+
+.bay-viewport {
+  overflow: hidden;
+  aspect-ratio: 800 / 360;
+  border: 1px solid var(--apex-line);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(120% 80% at 70% 20%, rgba(24, 156, 156, 0.18), transparent 55%),
+    var(--apex-surface);
+}
+
+.bay-zoom {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  transform: scale(var(--z, 1)) translate(calc((50 - var(--x, 50)) * 1%), calc((50 - var(--y, 50)) * 1%));
+  transition: transform 680ms var(--ease-out);
+}
+
+.bay-car { width: 100%; height: 100%; display: block; }
+
+.bay-car .zone {
+  fill: rgba(140, 243, 236, 0.16);
+  stroke: #8cf3ec;
+  stroke-width: 3;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out);
+}
+
+.bay-car[data-zone="oil"] .zone-oil,
+.bay-car[data-zone="fluids"] .zone-fluids,
+.bay-car[data-zone="filter"] .zone-filter,
+.bay-car[data-zone="battery"] .zone-battery,
+.bay-car[data-zone="brake"] .zone-brake,
+.bay-car[data-zone="line"] .zone-line,
+.bay-car[data-zone="tire"] .zone-tire,
+.bay-car[data-zone="align"] .zone-align,
+.bay-car[data-zone="suspension"] .zone-suspension,
+.bay-car[data-zone="engine"] .zone-engine,
+.bay-car[data-zone="trans"] .zone-trans,
+.bay-car[data-zone="cool"] .zone-cool,
+.bay-car[data-zone="electric"] .zone-electric,
+.bay-car[data-zone="hvac"] .zone-hvac,
+.bay-car[data-zone="exhaust"] .zone-exhaust,
+.bay-car[data-zone="inspect"] .zone-inspect { opacity: 1; }
+
+.pin {
+  position: absolute;
+  left: 66.25%;
+  top: 67.2%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #8cf3ec;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left 680ms var(--ease-out), top 680ms var(--ease-out);
+}
+
+.pin::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 2px;
+  height: 28px;
+  background: #8cf3ec;
+  transform: translateX(-50%);
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border: 2px solid rgba(140, 243, 236, 0.7);
+  border-radius: 50%;
+  animation: pin-pulse 1.6s var(--ease-out) infinite;
+}
+
+@keyframes pin-pulse {
+  from { transform: scale(0.7); opacity: 0.9; }
+  to { transform: scale(1.5); opacity: 0; }
+}
+
+.bay-status { margin: 14px 0 0; min-height: 3.4em; }
+
+.bay-where {
+  display: block;
+  color: var(--apex-white);
+  font-family: Oswald, "Arial Narrow", Impact, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+}
+
+.bay-name {
+  display: block;
+  margin-top: 4px;
+  color: var(--apex-cyan);
+  font-size: 15px;
+}
+
+.svc-group { margin: 0 0 22px; }
+
+.svc-group h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+
+.svc {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ctl);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.svc strong {
+  display: block;
+  color: var(--apex-white);
+  font-family: Oswald, "Arial Narrow", Impact, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.svc span {
+  display: block;
+  margin-top: 2px;
+  color: var(--apex-muted);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.svc:hover,
+.svc[aria-pressed="true"] {
+  background: var(--apex-surface-2);
+  border-color: var(--apex-line);
+  box-shadow: inset 3px 0 0 var(--apex-teal);
+}
+
+.bay-cta { margin: 8px 0 0; }
+
+@media (max-width: 900px) {
+  .bay { grid-template-columns: 1fr; }
+  .bay-stage {
+    order: -1;
+    position: sticky;
+    top: calc(var(--header) + 4px);
+    padding-bottom: 8px;
+    background: var(--apex-ground);
+  }
+}
