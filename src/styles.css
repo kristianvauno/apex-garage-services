@@ -1558,18 +1558,13 @@ html.js-motion .lane[data-reveal].is-pending {
 
 .bay-show .spin-stage {
   position: relative;
-  aspect-ratio: 16 / 11;
-  background:
-    radial-gradient(70% 42% at 50% 100%, rgba(24, 156, 156, 0.22), transparent 70%),
-    #152240;
+  aspect-ratio: 16 / 9;
+  background: #152240;
 }
 
 .bay-show .spin {
-  top: auto;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: calc(100% * 9 / 11);
+  inset: 0;
+  height: 100%;
 }
 
 .cutaway {
