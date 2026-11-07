@@ -1682,6 +1682,7 @@ html.js-motion .lane[data-reveal].is-pending {
 .bay-show .pick-list { gap: 14px; }
 
 .bay-show .lane {
+  align-items: stretch;
   padding: 0;
   border-left-width: 3px;
   border-left-color: rgba(181, 234, 248, 0.28);
@@ -1728,11 +1729,13 @@ html.js-motion .lane[data-reveal].is-pending {
   gap: 10px 14px;
   align-items: start;
   width: 100%;
+  height: 100%;
   margin: 0;
   padding: 22px 20px 20px;
   border: 0;
   background: none;
   box-shadow: none;
+  cursor: pointer;
 }
 
 .pick-no {

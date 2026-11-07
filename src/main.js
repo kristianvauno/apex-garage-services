@@ -305,13 +305,40 @@
       timer = setTimeout(tick, 340);
     }
 
+    function showStage() {
+      var stage = root.querySelector(".spin-stage");
+      if (!stage) return;
+      var rect = stage.getBoundingClientRect();
+      var header = 84;
+      var hidden = rect.bottom < header + 40 || rect.top > window.innerHeight - 40;
+      if (!hidden) return;
+      window.scrollTo({
+        top: Math.max(0, rect.top + window.scrollY - header),
+        behavior: reduce ? "auto" : "smooth"
+      });
+    }
+
     Array.prototype.forEach.call(buttons, function (btn) {
+      var lead = btn.classList.contains("svc-lead");
       btn.addEventListener("pointerenter", function (event) {
+        if (lead) return;
         if (event.pointerType && event.pointerType !== "mouse") return;
         select(btn, true);
       });
-      btn.addEventListener("focus", function () { select(btn, true); });
-      btn.addEventListener("click", function () { select(btn, true); });
+      btn.addEventListener("focus", function () {
+        if (lead) return;
+        select(btn, true);
+      });
+      btn.addEventListener("click", function () {
+        select(btn, true);
+        if (!lead) return;
+        var id = btn.getAttribute("data-service") || "";
+        if (id && window.history && window.history.replaceState) {
+          var next = "#" + id;
+          if (window.location.hash !== next) window.history.replaceState(null, "", next);
+        }
+        showStage();
+      });
     });
 
     var drag = null;
