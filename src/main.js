@@ -259,6 +259,7 @@
             set.classList.add("is-shown");
           }
         });
+        placeDock(id);
       });
       jobFade = setTimeout(function () {
         jobFade = null;
@@ -418,6 +419,38 @@
       setTimeout(function () { spin.classList.remove("is-dragging"); }, 80);
     });
 
+    function placeDock(id) {
+      var dock = root.querySelector(".job-dock");
+      var mark = id ? root.querySelector('.callout[data-service="' + id + '"]') : null;
+      if (!dock || !mark) return;
+      var sb = spin.getBoundingClientRect();
+      var mb = mark.getBoundingClientRect();
+      if (!sb.width || !sb.height) return;
+      var gap = 8;
+      var maxW = Math.min(300, Math.max(168, sb.width * 0.42));
+      dock.style.width = maxW + "px";
+      dock.style.maxHeight = Math.floor(sb.height * 0.52) + "px";
+      var left = mb.left - sb.left;
+      if (mb.left + mb.width / 2 > sb.left + sb.width * 0.5) left = mb.right - sb.left - maxW;
+      left = Math.max(8, Math.min(left, sb.width - maxW - 8));
+      var top = mb.bottom - sb.top + gap;
+      var room = sb.height - top - 6;
+      Array.prototype.forEach.call(root.querySelectorAll(".callout"), function (node) {
+        if (node === mark) return;
+        var cb = node.getBoundingClientRect();
+        var panelLeft = sb.left + left;
+        var panelRight = panelLeft + maxW;
+        if (cb.right < panelLeft + 4 || cb.left > panelRight - 4) return;
+        if (cb.top <= mb.bottom) return;
+        var limit = cb.top - sb.top - top - 8;
+        if (limit > 56 && limit < room) room = limit;
+      });
+      if (room < 48) room = 48;
+      dock.style.left = left + "px";
+      dock.style.top = top + "px";
+      dock.style.maxHeight = room + "px";
+    }
+
     function leadFor(id) {
       if (!/^[a-z]+$/.test(id || "")) return null;
       return root.querySelector('.svc-lead[data-service="' + id + '"]');
@@ -434,6 +467,10 @@
     window.addEventListener("hashchange", function () {
       var lead = leadFor((window.location.hash || "").replace("#", ""));
       if (lead) select(lead, true);
+    });
+    window.addEventListener("resize", function () {
+      if (!active) return;
+      placeDock(active.getAttribute("data-service") || "");
     });
   }
 
