@@ -197,6 +197,7 @@
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var frame = 0;
     var timer = null;
+    var jobFade = null;
     var token = 0;
     var active = null;
 
@@ -226,9 +227,43 @@
       Array.prototype.forEach.call(root.querySelectorAll(".lane[data-service]"), function (lane) {
         lane.classList.toggle("is-on", lane.getAttribute("data-service") === id);
       });
-      Array.prototype.forEach.call(root.querySelectorAll(".job-set"), function (set) {
-        set.hidden = set.getAttribute("data-service") !== id;
+      var sets = root.querySelectorAll(".job-set");
+      Array.prototype.forEach.call(sets, function (set) {
+        var on = !!id && set.getAttribute("data-service") === id;
+        if (on) {
+          set.inert = false;
+          if (set.hidden) {
+            set.hidden = false;
+            set.classList.add("is-out");
+            set.classList.remove("is-shown");
+          } else {
+            set.classList.add("is-shown");
+            set.classList.remove("is-out");
+          }
+        } else {
+          set.classList.remove("is-shown");
+          set.classList.add("is-out");
+          set.inert = true;
+        }
       });
+      if (jobFade) clearTimeout(jobFade);
+      requestAnimationFrame(function () {
+        Array.prototype.forEach.call(sets, function (set) {
+          if (!set.hidden && set.getAttribute("data-service") === id) {
+            set.classList.remove("is-out");
+            set.classList.add("is-shown");
+          }
+        });
+      });
+      jobFade = setTimeout(function () {
+        jobFade = null;
+        Array.prototype.forEach.call(sets, function (set) {
+          if (!set.classList.contains("is-shown")) {
+            set.hidden = true;
+            set.classList.remove("is-out");
+          }
+        });
+      }, reduce ? 0 : 400);
     }
 
     function select(btn, announce) {
@@ -265,9 +300,9 @@
           placePin(btn);
           return;
         }
-        timer = setTimeout(tick, 90);
+        timer = setTimeout(tick, 340);
       }
-      timer = setTimeout(tick, 90);
+      timer = setTimeout(tick, 340);
     }
 
     Array.prototype.forEach.call(buttons, function (btn) {

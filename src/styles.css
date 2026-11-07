@@ -1405,10 +1405,10 @@ html.js-motion .lane[data-reveal].is-pending {
   object-fit: cover;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 160ms linear;
+  transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.spin.is-dragging .spin-frame { transition-duration: 40ms; }
+.spin.is-dragging .spin-frame { transition-duration: 70ms; }
 
 .spin-frame.is-on { opacity: 1; }
 
@@ -1428,7 +1428,7 @@ html.js-motion .lane[data-reveal].is-pending {
   background: #8cf3ec;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: opacity 80ms linear;
+  transition: opacity 320ms var(--ease-out);
 }
 
 .spin.is-turning .pin,
@@ -1563,14 +1563,27 @@ html.js-motion .lane[data-reveal].is-pending {
 }
 
 .bay-show .bay-viewport {
-  aspect-ratio: 16 / 9;
-  min-height: 420px;
+  aspect-ratio: auto;
+  min-height: 0;
   border-radius: 20px;
-  background:
-    radial-gradient(70% 46% at 50% 88%, rgba(24, 156, 156, 0.28), transparent 72%),
-    radial-gradient(40% 30% at 50% 42%, rgba(181, 234, 248, 0.08), transparent 70%),
-    #15233f;
+  background: #152240;
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.bay-show .spin-stage {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  background:
+    radial-gradient(70% 42% at 50% 100%, rgba(24, 156, 156, 0.22), transparent 70%),
+    #152240;
+}
+
+.bay-show .spin {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc(100% * 9 / 11);
 }
 
 .bay-show .pin { width: 16px; height: 16px; }
@@ -1608,7 +1621,32 @@ html.js-motion .lane[data-reveal].is-pending {
   background: rgba(7, 14, 34, 0.78);
 }
 
-.job-dock { display: grid; gap: 12px; }
+.job-dock { display: grid; gap: 10px; }
+
+.job-sets { display: grid; }
+
+.bay-show .job-dock {
+  position: absolute;
+  z-index: 4;
+  top: 16px;
+  left: 16px;
+  right: 156px;
+  width: auto;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid rgba(181, 234, 248, 0.18);
+  border-radius: 16px;
+  background: rgba(7, 14, 34, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.bay-show .job-dock .svc { padding: 8px 10px; }
+
+.bay-show .job-dock .svc span {
+  margin-top: 1px;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
 
 .job-kicker {
   margin: 0;
@@ -1624,6 +1662,15 @@ html.js-motion .lane[data-reveal].is-pending {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  transition: opacity 400ms var(--ease-out);
+}
+
+.job-set.is-shown,
+.job-set.is-out { grid-area: 1 / 1; }
+
+.job-set.is-out {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .job-set[hidden] { display: none; }
@@ -1747,8 +1794,44 @@ html.js-motion .lane[data-reveal].is-pending {
 .bay-show .lane:hover .pick-where,
 .bay-show .lane:focus-within .pick-where { color: var(--apex-teal-text); }
 
-@media (max-width: 800px) {
-  .bay-show .bay-viewport { min-height: 280px; aspect-ratio: 4 / 3; }
+@media (max-width: 1000px) {
+  .bay-show .spin-stage {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: auto;
+    min-height: 0;
+    background: transparent;
+  }
+  .bay-show .spin {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    min-height: 230px;
+  }
+  .bay-show .spin-frame {
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  .bay-show .spin-hint { top: 8px; right: 8px; }
+  .bay-show .bay-status {
+    max-width: 46%;
+    padding: 10px 12px;
+  }
+  .bay-show .bay-name { font-size: 13px; }
+  .bay-show .job-dock {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    order: -1;
+    margin: 12px 12px 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
   .job-set { grid-template-columns: 1fr; }
   .bay-show .bay-where { font-size: 18px; }
   .bay-show .svc-lead,
