@@ -103,6 +103,20 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  const oldService = {
+    "/services/repair": "/services/#engine",
+    "/services/repair/": "/services/#engine",
+    "/services/maintenance": "/services/#routine",
+    "/services/maintenance/": "/services/#routine",
+    "/services/tuning": "/services/#engine",
+    "/services/tuning/": "/services/#engine"
+  };
+  if (oldService[pathname]) {
+    res.writeHead(301, Object.assign({ Location: oldService[pathname] }, SECURITY_HEADERS));
+    res.end();
+    return;
+  }
+
   // 301 /path/index.html -> /path/ (and /index.html -> /)
   if (/\/index\.html$/i.test(pathname)) {
     const clean = pathname.replace(/\/index\.html$/i, "/") || "/";

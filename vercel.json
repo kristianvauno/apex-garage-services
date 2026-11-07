@@ -1,6 +1,12 @@
 {
   "trailingSlash": true,
   "redirects": [
+    { "source": "/services/repair", "destination": "/services/#engine", "permanent": true },
+    { "source": "/services/repair/", "destination": "/services/#engine", "permanent": true },
+    { "source": "/services/maintenance", "destination": "/services/#routine", "permanent": true },
+    { "source": "/services/maintenance/", "destination": "/services/#routine", "permanent": true },
+    { "source": "/services/tuning", "destination": "/services/#engine", "permanent": true },
+    { "source": "/services/tuning/", "destination": "/services/#engine", "permanent": true },
     { "source": "/index.html", "destination": "/", "permanent": true },
     { "source": "/:path*/index.html", "destination": "/:path*/", "permanent": true }
   ],

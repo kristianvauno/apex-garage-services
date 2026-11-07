@@ -2,9 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://apex-garage-services.vercel.app/</loc></url>
   <url><loc>https://apex-garage-services.vercel.app/services/</loc></url>
-  <url><loc>https://apex-garage-services.vercel.app/services/maintenance/</loc></url>
-  <url><loc>https://apex-garage-services.vercel.app/services/repair/</loc></url>
-  <url><loc>https://apex-garage-services.vercel.app/services/tuning/</loc></url>
   <url><loc>https://apex-garage-services.vercel.app/about/</loc></url>
   <url><loc>https://apex-garage-services.vercel.app/reviews/</loc></url>
   <url><loc>https://apex-garage-services.vercel.app/contact/</loc></url>

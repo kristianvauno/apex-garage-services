@@ -212,7 +212,8 @@ p { margin: 0 0 16px; }
   left: 0;
   z-index: 5;
   width: max-content;
-  min-width: 292px;
+  min-width: 260px;
+  max-width: min(26rem, calc(100vw - 24px));
   padding: 8px;
   background: var(--apex-surface);
   border: 1px solid var(--apex-line);
@@ -249,8 +250,8 @@ p { margin: 0 0 16px; }
   min-height: 44px;
   padding: 10px 18px;
   line-height: 1.25;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+  letter-spacing: 0.02em;
+  white-space: normal;
 }
 
 .header-actions {
@@ -533,6 +534,58 @@ p { margin: 0 0 16px; }
   gap: 24px;
 }
 
+.lane-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lane {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 100%;
+  padding: 18px 18px 16px;
+  background: var(--apex-surface);
+  border: 1px solid var(--apex-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.lane-main {
+  color: var(--apex-white);
+  text-decoration: none;
+}
+
+.lane-main strong {
+  display: block;
+  margin-bottom: 6px;
+  font-family: Oswald, "Arial Narrow", Impact, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.lane-main span {
+  display: block;
+  color: var(--apex-muted);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.lane-main:hover { color: var(--apex-white); }
+
+.lane-est { font-weight: 600; }
+
+@media (max-width: 800px) {
+  .lane-list { grid-template-columns: 1fr; }
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -798,7 +851,7 @@ details p { margin: 12px 0 0; }
     transform: none;
     pointer-events: auto;
   }
-  .nav-menu a { white-space: nowrap; }
+  .nav-menu a { white-space: normal; }
   .menu-btn { display: inline-flex; align-items: center; justify-content: center; }
   .logo img { width: 44px; height: 44px; }
   .logo-text span:first-child { font-size: 18px; }
@@ -1347,17 +1400,21 @@ html.js-motion [data-reveal].is-shown {
   font-size: 15px;
 }
 
-.svc-group { margin: 0 0 22px; }
+.svc-group {
+  margin: 0 0 22px;
+  scroll-margin-top: calc(var(--header) + 12px);
+}
 
 .svc-title span { display: block; }
 .page-hero .svc-lede { max-width: 48ch; }
 
 .svc-group h3 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--apex-cyan);
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-transform: none;
 }
 
 .svc {

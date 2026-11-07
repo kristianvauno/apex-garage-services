@@ -72,6 +72,8 @@
 
   var params = new URLSearchParams(window.location.search);
   var service = params.get("service");
+  var aliases = { repair: "engine", maintenance: "routine", tuning: "engine" };
+  if (service && aliases[service]) service = aliases[service];
   var select = form.querySelector("[name=service]");
   if (service && select) {
     Array.prototype.forEach.call(select.options, function (option) {
