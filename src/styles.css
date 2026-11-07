@@ -1385,8 +1385,6 @@ html.js-motion .lane[data-reveal].is-pending {
 .spin {
   position: absolute;
   inset: 0;
-  touch-action: pan-y;
-  cursor: grab;
   user-select: none;
 }
 
@@ -1394,8 +1392,6 @@ html.js-motion .lane[data-reveal].is-pending {
   outline: 2px solid var(--apex-teal-text);
   outline-offset: -3px;
 }
-
-.spin.is-dragging { cursor: grabbing; }
 
 .spin-frame {
   position: absolute;
@@ -1408,15 +1404,7 @@ html.js-motion .lane[data-reveal].is-pending {
   transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.spin.is-dragging .spin-frame { transition-duration: 70ms; }
-
 .spin-frame.is-on { opacity: 1; }
-
-.spin-hint {
-  margin: 10px 0 0;
-  color: var(--apex-muted);
-  font-size: 14px;
-}
 
 .pin {
   position: absolute;
@@ -1431,9 +1419,7 @@ html.js-motion .lane[data-reveal].is-pending {
   transition: opacity 320ms var(--ease-out);
 }
 
-.spin.is-turning .pin,
-.spin.is-dragging .pin,
-.spin.is-free .pin { opacity: 0; }
+.spin.is-turning .pin { opacity: 0; }
 
 .pin::before {
   content: "";
@@ -1692,39 +1678,17 @@ html.js-motion .lane[data-reveal].is-pending {
 
 .callout:focus-visible { outline: 2px solid #10203f; outline-offset: 3px; }
 
-.spin.is-dragging .cutaway,
-.spin.is-free .cutaway {
-  opacity: 0;
-}
-
-.bay-show .spin:not(.is-dragging):not(.is-free) .pin,
-.bay-show .spin:not(.is-dragging):not(.is-free) .bay-status { opacity: 0; }
-
-.bay-show .spin-hint { z-index: 5; }
+.bay-show .pin,
+.bay-show .bay-status { opacity: 0; }
 
 .bay-show .pin { width: 16px; height: 16px; }
 .bay-show .pin::before { height: 42px; }
 
-.bay-show .spin-hint,
 .bay-show .bay-status {
   position: absolute;
   z-index: 3;
   margin: 0;
   pointer-events: none;
-}
-
-.bay-show .spin-hint {
-  top: auto;
-  right: 16px;
-  bottom: 16px;
-  padding: 6px 12px;
-  border: 1px solid var(--apex-line);
-  border-radius: 999px;
-  background: rgba(7, 14, 34, 0.62);
-  color: var(--apex-cyan);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .bay-show .bay-status {
@@ -1764,12 +1728,6 @@ html.js-motion .lane[data-reveal].is-pending {
 .bay-show .job-dock::-webkit-scrollbar-thumb {
   border-radius: 8px;
   background: rgba(181, 234, 248, 0.45);
-}
-
-.bay-show .spin.is-dragging .job-dock,
-.bay-show .spin.is-free .job-dock {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .bay-show .job-kicker { display: none; }
@@ -1956,7 +1914,6 @@ html.js-motion .lane[data-reveal].is-pending {
     object-fit: contain;
     object-position: center bottom;
   }
-  .bay-show .spin-hint { top: 8px; right: 8px; bottom: auto; }
   .callout { font-size: 11px; gap: 0; padding: 3px; }
   .callout b { width: 22px; height: 22px; font-size: 11px; }
   .bay-show .bay-status {

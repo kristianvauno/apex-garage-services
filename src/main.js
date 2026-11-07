@@ -213,7 +213,6 @@
       pin.style.left = (btn.getAttribute("data-px") || "50") + "%";
       pin.style.top = (btn.getAttribute("data-py") || "50") + "%";
       spin.classList.remove("is-turning");
-      spin.classList.remove("is-free");
     }
 
     function label(btn) {
@@ -351,72 +350,6 @@
         }
         showStage();
       });
-    });
-
-    var drag = null;
-    spin.addEventListener("pointerdown", function (event) {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      if (event.target.closest && event.target.closest(".job-dock, .callout")) return;
-      drag = { id: event.pointerId, x: event.clientX, acc: 0, turned: false };
-      spin.setPointerCapture(event.pointerId);
-      spin.classList.add("is-dragging");
-      token += 1;
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-      }
-    });
-    spin.addEventListener("pointermove", function (event) {
-      if (!drag || event.pointerId !== drag.id) return;
-      var moved = event.clientX - drag.x - drag.acc;
-      var stepPx = 28;
-      while (moved >= stepPx) {
-        showFrame(frame - 1);
-        drag.acc += stepPx;
-        drag.turned = true;
-        moved -= stepPx;
-      }
-      while (moved <= -stepPx) {
-        showFrame(frame + 1);
-        drag.acc -= stepPx;
-        drag.turned = true;
-        moved += stepPx;
-      }
-    });
-    function endDrag(event) {
-      if (!drag || event.pointerId !== drag.id) return;
-      var turned = drag.turned;
-      drag = null;
-      spin.classList.remove("is-dragging");
-      if (!turned && active) {
-        placePin(active);
-        return;
-      }
-      active = null;
-      spin.classList.add("is-free");
-      Array.prototype.forEach.call(buttons, function (item) {
-        item.setAttribute("aria-pressed", "false");
-      });
-      markService(null);
-    }
-    spin.addEventListener("pointerup", endDrag);
-    spin.addEventListener("pointercancel", endDrag);
-    spin.addEventListener("keydown", function (event) {
-      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-      event.preventDefault();
-      token += 1;
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-      }
-      showFrame(frame + (event.key === "ArrowRight" ? -1 : 1));
-      spin.classList.add("is-free");
-      active = null;
-      Array.prototype.forEach.call(buttons, function (item) {
-        item.setAttribute("aria-pressed", "false");
-      });
-      markService(null);
-      setTimeout(function () { spin.classList.remove("is-dragging"); }, 80);
     });
 
     function placeDock(id) {
