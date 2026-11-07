@@ -62,6 +62,7 @@
   });
 
   initReveal();
+  initLanes();
   initBay();
 
   var form = document.getElementById("estimate-form");
@@ -338,6 +339,20 @@
     }
   }
 
+  function initLanes() {
+    var fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!fine.matches || reduce.matches) return;
+    Array.prototype.forEach.call(document.querySelectorAll(".lane"), function (lane) {
+      lane.addEventListener("pointermove", function (event) {
+        if (event.pointerType && event.pointerType !== "mouse") return;
+        var rect = lane.getBoundingClientRect();
+        lane.style.setProperty("--spot-x", (event.clientX - rect.left) + "px");
+        lane.style.setProperty("--spot-y", (event.clientY - rect.top) + "px");
+      });
+    });
+  }
+
   function initReveal() {
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     var observer = null;
@@ -392,7 +407,7 @@
         var index = 0;
         Array.prototype.forEach.call(group.children, function (child) {
           if (!child.hasAttribute || !child.hasAttribute("data-reveal")) return;
-          var delay = Math.min(index * 70, 210);
+          var delay = child.classList.contains("lane") ? Math.min(index * 90, 540) : Math.min(index * 70, 210);
           if (delay) child.style.setProperty("--reveal-delay", delay + "ms");
           index += 1;
         });
