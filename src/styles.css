@@ -1713,8 +1713,9 @@ html.js-motion .lane[data-reveal].is-pending {
 }
 
 .bay-show .spin-hint {
-  top: 16px;
+  top: auto;
   right: 16px;
+  bottom: 16px;
   padding: 6px 12px;
   border: 1px solid var(--apex-line);
   border-radius: 999px;
@@ -1741,7 +1742,27 @@ html.js-motion .lane[data-reveal].is-pending {
 .job-sets { display: grid; }
 
 .bay-show .job-dock {
-  display: none;
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 72px;
+  right: 220px;
+  width: auto;
+  max-height: 62%;
+  margin: 0;
+  padding: 12px 12px 10px;
+  overflow: auto;
+  border: 1px solid rgba(181, 234, 248, 0.18);
+  border-radius: 16px;
+  background: rgba(7, 14, 34, 0.78);
+  backdrop-filter: blur(10px);
+  transition: opacity 320ms var(--ease-out);
+}
+
+.bay-show .spin.is-dragging .job-dock,
+.bay-show .spin.is-free .job-dock {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .bay-show .job-dock .svc { padding: 8px 10px; }
@@ -1766,7 +1787,7 @@ html.js-motion .lane[data-reveal].is-pending {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  transition: opacity 400ms var(--ease-out);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
 }
 
 .job-set.is-shown,
@@ -1774,6 +1795,7 @@ html.js-motion .lane[data-reveal].is-pending {
 
 .job-set.is-out {
   opacity: 0;
+  transform: translateY(10px);
   pointer-events: none;
 }
 
@@ -1921,7 +1943,7 @@ html.js-motion .lane[data-reveal].is-pending {
     object-fit: contain;
     object-position: center bottom;
   }
-  .bay-show .spin-hint { top: 8px; right: 8px; }
+  .bay-show .spin-hint { display: none; }
   .callout { font-size: 11px; gap: 0; padding: 3px; }
   .callout b { width: 22px; height: 22px; font-size: 11px; }
   .bay-show .bay-status {
@@ -1930,17 +1952,15 @@ html.js-motion .lane[data-reveal].is-pending {
   }
   .bay-show .bay-name { font-size: 13px; }
   .bay-show .job-dock {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    order: -1;
-    margin: 12px 12px 8px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    backdrop-filter: none;
+    top: 8px;
+    left: 46px;
+    right: 78px;
+    max-height: 48%;
+    padding: 8px;
+    border-radius: 12px;
   }
+  .bay-show .job-dock .svc strong { font-size: 14px; }
+  .bay-show .job-dock .svc span { font-size: 12px; }
   .job-set { grid-template-columns: 1fr; }
   .bay-show .bay-where { font-size: 18px; }
   .bay-show .svc-lead,

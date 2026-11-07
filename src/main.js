@@ -355,6 +355,7 @@
     var drag = null;
     spin.addEventListener("pointerdown", function (event) {
       if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (event.target.closest && event.target.closest(".job-dock, .callout")) return;
       drag = { id: event.pointerId, x: event.clientX, acc: 0, turned: false };
       spin.setPointerCapture(event.pointerId);
       spin.classList.add("is-dragging");
