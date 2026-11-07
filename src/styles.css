@@ -1742,25 +1742,19 @@ html.js-motion .lane[data-reveal].is-pending {
 .job-sets { display: grid; }
 
 .bay-show .job-dock {
-  position: absolute;
-  z-index: 4;
-  top: 14px;
-  left: 72px;
-  right: 220px;
+  position: relative;
+  z-index: 1;
   width: auto;
-  max-height: 62%;
   margin: 0;
-  padding: 12px 12px 10px;
-  overflow: auto;
+  padding: 16px 16px 8px;
   border: 1px solid rgba(181, 234, 248, 0.18);
   border-radius: 16px;
-  background: rgba(7, 14, 34, 0.78);
-  backdrop-filter: blur(10px);
+  background: rgba(7, 14, 34, 0.55);
   transition: opacity 320ms var(--ease-out);
 }
 
-.bay-show .spin.is-dragging .job-dock,
-.bay-show .spin.is-free .job-dock {
+.bay-show:has(.spin.is-dragging) .job-dock,
+.bay-show:has(.spin.is-free) .job-dock {
   opacity: 0;
   pointer-events: none;
 }
@@ -1943,7 +1937,7 @@ html.js-motion .lane[data-reveal].is-pending {
     object-fit: contain;
     object-position: center bottom;
   }
-  .bay-show .spin-hint { display: none; }
+  .bay-show .spin-hint { top: 8px; right: 8px; bottom: auto; }
   .callout { font-size: 11px; gap: 0; padding: 3px; }
   .callout b { width: 22px; height: 22px; font-size: 11px; }
   .bay-show .bay-status {
@@ -1952,11 +1946,7 @@ html.js-motion .lane[data-reveal].is-pending {
   }
   .bay-show .bay-name { font-size: 13px; }
   .bay-show .job-dock {
-    top: 8px;
-    left: 46px;
-    right: 78px;
-    max-height: 48%;
-    padding: 8px;
+    padding: 12px 12px 6px;
     border-radius: 12px;
   }
   .bay-show .job-dock .svc strong { font-size: 14px; }
