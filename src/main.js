@@ -221,11 +221,22 @@
       if (name) name.textContent = title ? title.textContent : "";
     }
 
+    function markService(btn) {
+      var id = btn ? btn.getAttribute("data-service") || "" : "";
+      Array.prototype.forEach.call(root.querySelectorAll(".lane[data-service]"), function (lane) {
+        lane.classList.toggle("is-on", lane.getAttribute("data-service") === id);
+      });
+      Array.prototype.forEach.call(root.querySelectorAll(".job-set"), function (set) {
+        set.hidden = set.getAttribute("data-service") !== id;
+      });
+    }
+
     function select(btn, announce) {
       active = btn;
       Array.prototype.forEach.call(buttons, function (item) {
         item.setAttribute("aria-pressed", item === btn ? "true" : "false");
       });
+      markService(btn);
       if (announce) label(btn);
       var target = Number(btn.getAttribute("data-frame"));
       if (isNaN(target)) target = 0;
@@ -311,6 +322,7 @@
       Array.prototype.forEach.call(buttons, function (item) {
         item.setAttribute("aria-pressed", "false");
       });
+      markService(null);
     }
     spin.addEventListener("pointerup", endDrag);
     spin.addEventListener("pointercancel", endDrag);
@@ -328,15 +340,27 @@
       Array.prototype.forEach.call(buttons, function (item) {
         item.setAttribute("aria-pressed", "false");
       });
+      markService(null);
       setTimeout(function () { spin.classList.remove("is-dragging"); }, 80);
     });
 
-    var current = root.querySelector('.svc[aria-pressed="true"]') || buttons[0];
+    function leadFor(id) {
+      if (!/^[a-z]+$/.test(id || "")) return null;
+      return root.querySelector('.svc-lead[data-service="' + id + '"]');
+    }
+
+    var hashLead = leadFor((window.location.hash || "").replace("#", ""));
+    var current = hashLead || root.querySelector('.svc[aria-pressed="true"]') || buttons[0];
     if (current) {
       frame = Number(current.getAttribute("data-frame")) || 0;
       showFrame(frame);
       select(current, false);
+      label(current);
     }
+    window.addEventListener("hashchange", function () {
+      var lead = leadFor((window.location.hash || "").replace("#", ""));
+      if (lead) select(lead, true);
+    });
   }
 
   function initLanes() {
