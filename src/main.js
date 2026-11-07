@@ -227,6 +227,11 @@
       Array.prototype.forEach.call(root.querySelectorAll(".lane[data-service]"), function (lane) {
         lane.classList.toggle("is-on", lane.getAttribute("data-service") === id);
       });
+      Array.prototype.forEach.call(root.querySelectorAll(".callout, .cdot, .cline"), function (node) {
+        var on = !!id && node.getAttribute("data-service") === id;
+        node.classList.toggle("is-on", on);
+        if (node.classList.contains("callout")) node.setAttribute("aria-pressed", on ? "true" : "false");
+      });
       var sets = root.querySelectorAll(".job-set");
       Array.prototype.forEach.call(sets, function (set) {
         var on = !!id && set.getAttribute("data-service") === id;
@@ -318,21 +323,27 @@
       });
     }
 
-    Array.prototype.forEach.call(buttons, function (btn) {
+    Array.prototype.forEach.call(root.querySelectorAll(".svc, .callout"), function (btn) {
       var lead = btn.classList.contains("svc-lead");
+      var marker = btn.classList.contains("callout");
       btn.addEventListener("pointerenter", function (event) {
-        if (lead) return;
+        if (lead || marker) return;
         if (event.pointerType && event.pointerType !== "mouse") return;
         select(btn, true);
       });
       btn.addEventListener("focus", function () {
-        if (lead) return;
+        if (lead || marker) return;
         select(btn, true);
       });
       btn.addEventListener("click", function () {
-        select(btn, true);
-        if (!lead) return;
-        var id = btn.getAttribute("data-service") || "";
+        var target = btn;
+        if (marker) {
+          var picked = root.querySelector('.pick-list .svc-lead[data-service="' + (btn.getAttribute("data-service") || "") + '"]');
+          if (picked) target = picked;
+        }
+        select(target, true);
+        if (!lead && !marker) return;
+        var id = target.getAttribute("data-service") || "";
         if (id && window.history && window.history.replaceState) {
           var next = "#" + id;
           if (window.location.hash !== next) window.history.replaceState(null, "", next);

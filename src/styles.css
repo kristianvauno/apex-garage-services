@@ -1586,6 +1586,104 @@ html.js-motion .lane[data-reveal].is-pending {
   height: calc(100% * 9 / 11);
 }
 
+.cutaway {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease-out);
+}
+
+.cutaway img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.callout-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cline {
+  stroke: rgba(181, 234, 248, 0.75);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+  fill: none;
+}
+
+.cline.is-on { stroke: #8cf3ec; stroke-width: 2px; }
+
+.cdot {
+  position: absolute;
+  z-index: 3;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #8cf3ec;
+  box-shadow: 0 0 0 4px rgba(140, 243, 236, 0.22);
+}
+
+.cdot.is-on { box-shadow: 0 0 0 6px rgba(140, 243, 236, 0.38); }
+
+.callout {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  margin: 0;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  color: #10203f;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  font-family: Oswald, "Arial Narrow", Impact, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: auto;
+}
+
+.callout b {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #149c9c;
+  color: #fff;
+  font-size: 13px;
+}
+
+.callout.is-on {
+  border-color: #8cf3ec;
+  box-shadow: 0 0 0 3px rgba(140, 243, 236, 0.35), 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.callout:focus-visible { outline: 2px solid #10203f; outline-offset: 3px; }
+
+.spin.is-dragging .cutaway,
+.spin.is-free .cutaway {
+  opacity: 0;
+}
+
+.bay-show .spin:not(.is-dragging):not(.is-free) .pin,
+.bay-show .spin:not(.is-dragging):not(.is-free) .bay-status { opacity: 0; }
+
+.bay-show .spin-hint { z-index: 5; }
+
 .bay-show .pin { width: 16px; height: 16px; }
 .bay-show .pin::before { height: 42px; }
 
@@ -1818,6 +1916,8 @@ html.js-motion .lane[data-reveal].is-pending {
     object-position: center bottom;
   }
   .bay-show .spin-hint { top: 8px; right: 8px; }
+  .callout { font-size: 11px; gap: 6px; padding: 3px 8px 3px 3px; }
+  .callout b { width: 22px; height: 22px; font-size: 11px; }
   .bay-show .bay-status {
     max-width: 46%;
     padding: 10px 12px;
