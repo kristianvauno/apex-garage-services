@@ -1336,10 +1336,15 @@ html.js-motion [data-reveal].is-shown {
 
 .svc-group { margin: 0 0 22px; }
 
+.svc-title span { display: block; }
+.page-hero .svc-lede { max-width: 48ch; }
+
 .svc-group h3 {
   margin: 0 0 8px;
-  font-size: 18px;
-  letter-spacing: 0.04em;
+  color: var(--apex-cyan);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .svc {
