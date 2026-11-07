@@ -426,29 +426,107 @@
       var sb = spin.getBoundingClientRect();
       var mb = mark.getBoundingClientRect();
       if (!sb.width || !sb.height) return;
-      var gap = 8;
-      var maxW = Math.min(300, Math.max(168, sb.width * 0.42));
+      if (sb.width < 700) {
+        var phoneW = Math.min(300, Math.max(168, sb.width * 0.42));
+        dock.style.width = phoneW + "px";
+        var phoneLeft = mb.left - sb.left;
+        if (mb.left + mb.width / 2 > sb.left + sb.width * 0.5) phoneLeft = mb.right - sb.left - phoneW;
+        phoneLeft = Math.max(8, Math.min(phoneLeft, sb.width - phoneW - 8));
+        var phoneTop = mb.bottom - sb.top + 8;
+        var phoneRoom = sb.height - phoneTop - 6;
+        Array.prototype.forEach.call(root.querySelectorAll(".callout"), function (node) {
+          if (node === mark) return;
+          var cb = node.getBoundingClientRect();
+          var panelLeft = sb.left + phoneLeft;
+          var panelRight = panelLeft + phoneW;
+          if (cb.right < panelLeft + 4 || cb.left > panelRight - 4) return;
+          if (cb.top <= mb.bottom) return;
+          var limit = cb.top - sb.top - phoneTop - 8;
+          if (limit > 56 && limit < phoneRoom) phoneRoom = limit;
+        });
+        if (phoneRoom < 48) phoneRoom = 48;
+        dock.style.left = Math.round(phoneLeft) + "px";
+        dock.style.top = Math.round(phoneTop) + "px";
+        dock.style.maxHeight = Math.round(phoneRoom) + "px";
+        return;
+      }
+      var gap = 10;
+      var edge = 10;
+      var maxW = Math.round(Math.min(380, Math.max(220, sb.width * 0.4)));
       dock.style.width = maxW + "px";
-      dock.style.maxHeight = Math.floor(sb.height * 0.52) + "px";
-      var left = mb.left - sb.left;
-      if (mb.left + mb.width / 2 > sb.left + sb.width * 0.5) left = mb.right - sb.left - maxW;
-      left = Math.max(8, Math.min(left, sb.width - maxW - 8));
+      var onRight = mb.left + mb.width / 2 > sb.left + sb.width * 0.5;
+      var left = onRight ? mb.right - sb.left - maxW : mb.left - sb.left;
       var top = mb.bottom - sb.top + gap;
-      var room = sb.height - top - 6;
-      Array.prototype.forEach.call(root.querySelectorAll(".callout"), function (node) {
-        if (node === mark) return;
-        var cb = node.getBoundingClientRect();
-        var panelLeft = sb.left + left;
+      var ceiling = Math.round(Math.min(230, sb.height * 0.58));
+      var readable = Math.min(150, ceiling);
+      function clampLeft(value) {
+        return Math.max(edge, Math.min(value, sb.width - maxW - edge));
+      }
+      function roomAt(panelLeft, panelTop) {
         var panelRight = panelLeft + maxW;
-        if (cb.right < panelLeft + 4 || cb.left > panelRight - 4) return;
-        if (cb.top <= mb.bottom) return;
-        var limit = cb.top - sb.top - top - 8;
-        if (limit > 56 && limit < room) room = limit;
-      });
-      if (room < 48) room = 48;
-      dock.style.left = left + "px";
-      dock.style.top = top + "px";
-      dock.style.maxHeight = room + "px";
+        var limit = sb.height - panelTop - edge;
+        Array.prototype.forEach.call(root.querySelectorAll(".callout"), function (node) {
+          if (node === mark) return;
+          var cb = node.getBoundingClientRect();
+          var cLeft = cb.left - sb.left;
+          var cRight = cb.right - sb.left;
+          if (cRight < panelLeft + 8 || cLeft > panelRight - 8) return;
+          if (cb.bottom <= sb.top + panelTop + 2) return;
+          var next = cb.top - sb.top - panelTop - 10;
+          if (next < limit) limit = next;
+        });
+        return limit;
+      }
+      left = clampLeft(left);
+      var fit = roomAt(left, top);
+      if (fit < readable) {
+        var limiter = null;
+        var limiterRoom = fit;
+        Array.prototype.forEach.call(root.querySelectorAll(".callout"), function (node) {
+          if (node === mark) return;
+          var cb = node.getBoundingClientRect();
+          var cLeft = cb.left - sb.left;
+          var cRight = cb.right - sb.left;
+          if (cRight < left + 8 || cLeft > left + maxW - 8) return;
+          if (cb.top <= mb.bottom + 2) return;
+          var next = cb.top - sb.top - top - 10;
+          if (next <= limiterRoom + 1) {
+            limiter = cb;
+            limiterRoom = next;
+          }
+        });
+        if (limiter) {
+          var candidate = onRight ? limiter.left - sb.left - maxW - 12 : limiter.right - sb.left + 12;
+          candidate = clampLeft(candidate);
+          var nextFit = roomAt(candidate, top);
+          if (nextFit > fit + 24) {
+            left = candidate;
+            fit = nextFit;
+          }
+        }
+      }
+      var shown = Math.min(fit, ceiling);
+      if (shown < readable) {
+        var aboveH = Math.min(ceiling, mb.top - sb.top - gap - edge);
+        var aboveTop = Math.max(edge, mb.top - sb.top - gap - aboveH);
+        if (aboveH > shown) {
+          var aboveFit = roomAt(left, aboveTop);
+          if (aboveFit > shown + 24) {
+            var height = Math.min(aboveFit, aboveH, ceiling);
+            top = mb.top - sb.top - gap - height;
+            if (top < edge) {
+              height -= edge - top;
+              top = edge;
+            }
+            fit = height;
+          }
+        }
+      }
+      if (top < edge) top = edge;
+      fit = Math.max(0, Math.min(fit, ceiling, sb.height - top - edge));
+      dock.style.left = Math.round(left) + "px";
+      dock.style.top = Math.round(top) + "px";
+      dock.style.maxHeight = Math.round(fit) + "px";
     }
 
     function leadFor(id) {

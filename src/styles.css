@@ -1745,16 +1745,25 @@ html.js-motion .lane[data-reveal].is-pending {
 .bay-show .job-dock {
   position: absolute;
   z-index: 4;
-  width: min(300px, 46%);
-  max-height: 52%;
+  width: min(380px, calc(100% - 20px));
+  max-height: 42%;
   margin: 0;
-  padding: 8px 10px 6px;
+  padding: 12px 16px 10px;
   overflow: auto;
   border: 1px solid rgba(181, 234, 248, 0.22);
   border-radius: 14px;
-  background: rgba(7, 14, 34, 0.9);
+  background: rgba(7, 14, 34, 0.92);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(181, 234, 248, 0.45) transparent;
   transition: opacity 320ms var(--ease-out);
+}
+
+.bay-show .job-dock::-webkit-scrollbar { width: 8px; }
+
+.bay-show .job-dock::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(181, 234, 248, 0.45);
 }
 
 .bay-show .spin.is-dragging .job-dock,
@@ -1767,12 +1776,14 @@ html.js-motion .lane[data-reveal].is-pending {
 
 .bay-show .job-set { grid-template-columns: 1fr; }
 
-.bay-show .job-dock .svc { padding: 8px 10px; }
+.bay-show .job-dock .svc { padding: 6px 0; }
+
+.bay-show .job-dock .svc strong { font-size: 18px; }
 
 .bay-show .job-dock .svc span {
-  margin-top: 1px;
-  font-size: 13.5px;
-  line-height: 1.35;
+  margin-top: 3px;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 .job-kicker {
@@ -1954,11 +1965,11 @@ html.js-motion .lane[data-reveal].is-pending {
   }
   .bay-show .bay-name { font-size: 13px; }
   .bay-show .job-dock {
-    padding: 12px 12px 6px;
+    padding: 10px 12px 8px;
     border-radius: 12px;
   }
-  .bay-show .job-dock .svc strong { font-size: 14px; }
-  .bay-show .job-dock .svc span { font-size: 12px; }
+  .bay-show .job-dock .svc strong { font-size: 16px; }
+  .bay-show .job-dock .svc span { font-size: 14px; }
   .job-set { grid-template-columns: 1fr; }
   .bay-show .bay-where { font-size: 18px; }
   .bay-show .svc-lead,
